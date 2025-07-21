@@ -46,7 +46,7 @@
                                 <td>{{ c.codigo }}</td>
                                 <td>{{ c.nombre }}</td>
                                 <td>{{ c.creditos }}</td>
-                                <td><a href="edicionCurso" class="btn btn-info btn-sm">Editar</a></td>
+                                <td><a href="{% url 'edicionCurso' c.codigo %}" class="btn btn-info btn-sm">Editar</a></td>
                                 <td><a href="{% url 'eliminacionCurso' c.codigo %}" class="btn btn-danger btn-sm">Eliminar</a></td>
                             </tr>
                             {% empty %}

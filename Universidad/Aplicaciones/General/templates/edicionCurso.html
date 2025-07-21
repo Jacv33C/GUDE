@@ -1,0 +1,25 @@
+{% extends './base.html' %}
+
+{% block body %}
+<div class="row">
+    <div class="col-md-4 offset-md-4">
+        <h3 class="mb-0">Edición Materia</h3>
+        <div class="card-body">
+            <form action="{% url 'editarMateria' %}" method="post"> 
+                {% csrf_token %}
+                <div class="form-group mb-3">
+                    <input type="text" name="txtCodigo" id="txtCodigo" value="{{ curso.codigo }}" class="form-control" placeholder="Código" minlength="5" maxlength="5" readonly required>
+                </div>
+                <div class="form-group mb-3">
+                    <input type="text" name="txtNombre" id="txtNombre" value="{{ curso.nombre }}" class="form-control" placeholder="Nombre" maxlength="50" required>
+                </div>
+                <div class="form-group mb-3">
+                    <input type="number" name="numCreditos" id="numCreditos" value="{{ curso.creditos }}" class="form-control" placeholder="Créditos" min="1" max="9" required>
+                </div>
+                <button type="submit" class="btn btn-success w-100">Guardar</button>
+            </form>
+        </div>
+    </div>
+
+   
+{% endblock %}
