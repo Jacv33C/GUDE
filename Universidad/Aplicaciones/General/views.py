@@ -1,7 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Curso
 
-
 from django.shortcuts import render, redirect
 
 def login_view(request):
@@ -10,13 +9,18 @@ def login_view(request):
         username = request.POST.get("username")
         password = request.POST.get("password")
 
-        # Verificamos si coincide con los datos "duros"
+        # Redirigir según el usuario y contraseña
         if username == "jacvpa33personal@gmail.com" and password == "001122":
             return redirect('home')
+        elif username == "jacvpa33@gmail.com" and password == "001122":
+            return redirect('baseAlumnos')
         else:
             error = "Usuario o contraseña incorrectos."
 
     return render(request, "login.html", {"error": error})
+
+def baseAlumnos(request):
+    return render(request, "baseAlumnos.html")
 
 
 def home(request):

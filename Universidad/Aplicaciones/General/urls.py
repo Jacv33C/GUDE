@@ -2,8 +2,16 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('', views.login_view, name='login'), 
+    # Página de login (redirige a home o baseAlumnos)
+    path('', views.login_view, name='login'),
+
+    # Página principal (usuario personal)
     path('home/', views.home, name='home'),
+
+    # Página para alumnos después del login
+    path('baseAlumnos/', views.baseAlumnos, name='baseAlumnos'),
+
+    # Sección de materias
     path('materias/', views.materias, name='materias'),
     path('materias/registrarMateria/', views.registrarMateria, name='registrarMateria'),
     path('materias/eliminacionCurso/<str:codigo>/', views.eliminacionCurso, name='eliminacionCurso'),
