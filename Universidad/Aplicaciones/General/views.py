@@ -10,9 +10,11 @@ def login_view(request):
         username = request.POST.get("username")
         password = request.POST.get("password")
 
-        # Verificamos si coincide con los datos "duros"
+        # Redirigir según el usuario y contraseña
         if username == "jacvpa33personal@gmail.com" and password == "001122":
             return redirect('home')
+        elif username == "jacvpa33@gmail.com" and password == "001122":
+            return redirect('baseAlumnos')
         else:
             error = "Usuario o contraseña incorrectos."
 
@@ -21,6 +23,16 @@ def login_view(request):
 
 def home(request):
     return render(request, "home.html")
+
+
+def baseAlumnos(request):
+    return render(request, "BaseAlumnos.html")
+
+def homebasealumnos(request):
+    return render(request, "homebasealumnos.html")
+
+def nuevoalumno(request):
+    return render(request, "nuevoalumno.html")
 
 
 def materias(request):
@@ -78,3 +90,7 @@ def editarMateria(request):
 def materias(request):
     cursos = Curso.objects.all()
     return render(request, "Materias.html", {"cursos": cursos})
+
+#Alumnos
+def cargamateria(request):
+    return render(request, "cargamateria.html")

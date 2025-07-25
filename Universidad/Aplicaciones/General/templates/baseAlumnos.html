@@ -66,7 +66,7 @@
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
           <ul class="navbar-nav ms-auto">
             <li class="nav-item">
-              <a class="nav-link" href="{% url 'home' %}">Home</a>
+              <a class="nav-link" href="{% url 'homebasealumnos' %}">Home</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="#">Datos Generales</a>
@@ -76,7 +76,7 @@
                 Materias
               </a>
               <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#">Carga de Materias</a></li>
+                <li><a class="dropdown-item" href="{% url 'cargamaterias'%}">Carga de Materias</a></li>
                 <li><a class="dropdown-item" href="#">Ver Materias</a></li>
                 <li><a class="dropdown-item" href="#">Something else here</a></li>
               </ul>
