@@ -1,0 +1,34 @@
+{% extends './base.html' %}
+
+{% block body %}
+<div class="row">
+  <div class="col-md-4 offset-md-4">
+    <h3 class="mb-0">Edición de Alumno</h3>
+    <div class="card-body">
+      <form action="{% url 'editarAlumno' %}" method="post">
+        {% csrf_token %}
+        <div class="form-group mb-3">
+          <input type="text" name="txtMatricula" id="txtMatricula" value="{{ alumno.matricula }}" class="form-control" placeholder="Matrícula" maxlength="9" readonly required>
+        </div>
+        <div class="form-group mb-3">
+          <input type="text" name="txtNombre" id="txtNombre" value="{{ alumno.nombre }}" class="form-control" placeholder="Nombre completo" maxlength="100" required>
+        </div>
+        <div class="form-group mb-3">
+          <input type="email" name="txtCorreo" id="txtCorreo" value="{{ alumno.correo }}" class="form-control" placeholder="Correo electrónico" required>
+        </div>
+        <div class="form-group mb-3">
+          <input type="text" name="txtCurp" id="txtCurp" value="{{ alumno.curp }}" class="form-control" placeholder="CURP" maxlength="18" required>
+        </div>
+        <div class="form-group mb-3">
+          <select name="selectEstado" id="selectEstado" class="form-control" required>
+            <option value="activo" {% if alumno.estado == 'activo' %}selected{% endif %}>Activo</option>
+            <option value="inactivo" {% if alumno.estado == 'inactivo' %}selected{% endif %}>Inactivo</option>
+            <option value="sabatico" {% if alumno.estado == 'sabatico' %}selected{% endif %}>Sabático</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-success w-100">Guardar Cambios</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,4 +1,5 @@
 {% extends "./base.html" %}
+{% load static %}
 
 {% block body %}
 <div class="container mt-4">
@@ -9,16 +10,26 @@
           <h3 class="mb-0">Agregar Nuevo Alumno</h3>
         </div>
         <div class="card-body">
-          <form action="{% url 'registrarMateria' %}" method="post">
+          <form action="{% url 'registrarAlumno' %}" method="post">
             {% csrf_token %}
             <div class="form-group mb-3">
-              <input type="text" name="txtCodigo" id="txtCodigo" class="form-control" placeholder="Código" minlength="5" maxlength="5" required />
+              <input type="text" name="txtMatricula" id="txtMatricula" class="form-control" placeholder="Matrícula" maxlength="9" required />
             </div>
             <div class="form-group mb-3">
-              <input type="text" name="txtNombre" id="txtNombre" class="form-control" placeholder="Nombre" maxlength="50" required />
+              <input type="text" name="txtNombre" id="txtNombre" class="form-control" placeholder="Nombre completo" maxlength="100" required />
             </div>
             <div class="form-group mb-3">
-              <input type="number" name="numCreditos" id="numCreditos" class="form-control" placeholder="Créditos" min="1" max="9" value="1" required />
+              <input type="email" name="txtCorreo" id="txtCorreo" class="form-control" placeholder="Correo electrónico" required />
+            </div>
+            <div class="form-group mb-3">
+              <input type="text" name="txtCurp" id="txtCurp" class="form-control" placeholder="CURP" maxlength="18" required />
+            </div>
+            <div class="form-group mb-3">
+              <select name="selectEstado" id="selectEstado" class="form-control" required>
+                <option value="activo">Activo</option>
+                <option value="inactivo">Inactivo</option>
+                <option value="sabatico">Sabático</option>
+              </select>
             </div>
             <button type="submit" class="btn btn-success w-100">Guardar</button>
           </form>
@@ -36,25 +47,29 @@
             <thead>
               <tr>
                 <th>#</th>
-                <th>Código</th>
+                <th>Matrícula</th>
                 <th>Nombre</th>
-                <th>Créditos</th>
+                <th>Correo</th>
+                <th>CURP</th>
+                <th>Estado</th>
                 <th colspan="2">Opciones</th>
               </tr>
             </thead>
             <tbody>
-              {% for c in cursos %}
+              {% for a in alumnos %}
               <tr>
                 <td>{{ forloop.counter }}</td>
-                <td>{{ c.codigo }}</td>
-                <td>{{ c.nombre }}</td>
-                <td>{{ c.creditos }}</td>
-                <td><a href="{% url 'edicionCurso' c.codigo %}" class="btn btn-info btn-sm">Editar</a></td>
-                <td><a href="{% url 'eliminacionCurso' c.codigo %}" class="btn btn-danger btn-sm btnEliminacion">Eliminar</a></td>
+                <td>{{ a.matricula }}</td>
+                <td>{{ a.nombre }}</td>
+                <td>{{ a.correo }}</td>
+                <td>{{ a.curp }}</td>
+                <td>{{ a.estado }}</td>
+                <td><a href="{% url 'edicionAlumno' a.matricula %}" class="btn btn-info btn-sm">Editar</a></td>
+                <td><a href="{% url 'eliminacionAlumno' a.matricula %}" class="btn btn-danger btn-sm btnEliminacion">Eliminar</a></td>
               </tr>
               {% empty %}
               <tr>
-                <td colspan="6" class="text-center text-muted">No hay materias registradas</td>
+                <td colspan="8" class="text-center text-muted">No hay alumnos registrados</td>
               </tr>
               {% endfor %}
             </tbody>
