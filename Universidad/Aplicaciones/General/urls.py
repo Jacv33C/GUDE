@@ -10,6 +10,7 @@ urlpatterns = [
     path('baseAlumnos/', views.baseAlumnos, name='baseAlumnos'),
     path('homebasealumnos/', views.homebasealumnos, name='homebasealumnos'),
     path('cargamaterias/', views.cargamateria, name='cargamaterias'),
+     path('logout/', views.cerrar_sesion, name='cerrar_sesion'),
 
     # CRUD MATERIAS
     path('materias/', views.materias, name='materias'),
@@ -24,6 +25,7 @@ urlpatterns = [
     path('alumnos/edicionAlumno/<str:matricula>/', views.edicionAlumno, name='edicionAlumno'),
     path('alumnos/editarAlumno/', views.editarAlumno, name='editarAlumno'),
     path('alumnos/eliminacionAlumno/<str:matricula>/', views.eliminacionAlumno, name='eliminacionAlumno'),
+    path('datosgeneralesalumnos', views.datosgeneralesalumnos, name="datosgeneralesalumnos"),
 
     # CRUD DOCENTES
     path('nuevodocente/', views.nuevodocente, name='nuevodocente'),

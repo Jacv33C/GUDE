@@ -1,19 +1,47 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Curso, Alumno, Docente
 
-# ---------------- LOGIN ----------------
 def login_view(request):
     error = ""
     if request.method == "POST":
         username = request.POST.get("username")
         password = request.POST.get("password")
 
-        if username == "jacvpa33personal@gmail.com" and password == "001122":
+        # ADMINISTRADOR
+        if username == "jacvpa33@gmail.com" and password == "001122":
+            request.session["tipo_usuario"] = "admin"
+            request.session["nombre"] = "Administrador"
             return redirect('home')
-        elif username == "jacvpa33@gmail.com" and password == "001122":
-            return redirect('baseAlumnos')
-        else:
-            error = "Usuario o contraseña incorrectos."
+
+        # ALUMNO
+        try:
+            alumno = Alumno.objects.get(correo=username)
+            if alumno.matricula == password:
+                if alumno.estado != "activo":
+                    error = "El alumno no está activo"
+                else:
+                    request.session["tipo_usuario"] = "alumno"
+                    request.session["alumno_id"] = alumno.matricula
+                    request.session["nombre"] = alumno.nombre
+                    return redirect('baseAlumnos')
+            else:
+                error = "Contraseña incorrecta"
+            return render(request, "login.html", {"error": error})
+        except Alumno.DoesNotExist:
+            pass  # Sigue intentando como docente
+
+        # DOCENTE
+        try:
+            docente = Docente.objects.get(correo=username)
+            if docente.rfc == password:
+                request.session["tipo_usuario"] = "docente"
+                request.session["docente_id"] = docente.id
+                request.session["nombre"] = docente.nombre
+                return redirect('baseDocentes')
+            else:
+                error = "Contraseña incorrecta"
+        except Docente.DoesNotExist:
+            error = "No existe un usuario con ese correo"
 
     return render(request, "login.html", {"error": error})
 
@@ -30,6 +58,12 @@ def homebasealumnos(request):
 
 def cargamateria(request):
     return render(request, "cargamateria.html")
+from django.shortcuts import redirect
+
+def cerrar_sesion(request):
+    request.session.flush()  
+    return redirect('login') 
+
 
 
 # ---------------- CRUD MATERIAS ----------------
@@ -115,6 +149,9 @@ def eliminacionAlumno(request, matricula):
     alumno = get_object_or_404(Alumno, matricula=matricula)
     alumno.delete()
     return redirect('nuevoalumno')
+
+def datosgeneralesalumnos(request):
+    return render(request, "datosgeneralesalumnos.html")
 
 
 # ---------------- CRUD DOCENTES ----------------
