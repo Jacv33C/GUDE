@@ -1,0 +1,88 @@
+{% extends "./base.html" %}
+{% load static %}
+
+{% block body %}
+<div class="container mt-4">
+  <div class="row">
+    <!-- Formulario para agregar nuevo docente -->
+    <div class="col-md-4">
+      <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+          <h3 class="mb-0">Agregar Nuevo Docente</h3>
+        </div>
+        <div class="card-body">
+          <form action="{% url 'registrarDocente' %}" method="post">
+            {% csrf_token %}
+            <div class="form-group mb-3">
+          <input type="text" name="txtId" id="txtId" class="form-control" placeholder="ID" maxlength="9" required>
+
+            </div>
+            <div class="form-group mb-3">
+              <input type="text" name="txtNombre" id="txtNombre" class="form-control" placeholder="Nombre completo" maxlength="100" required />
+            </div>
+            <div class="form-group mb-3">
+              <input type="email" name="txtCorreo" id="txtCorreo" class="form-control" placeholder="Correo electrónico" required />
+            </div>
+            <div class="form-group mb-3">
+              <select name="txtEspecialidad" id="txtEspecialidad" class="form-control">
+                <option value="" selected disabled>Selecciona una materia</option>
+                {% for curso in cursos %}
+                 <option value="{{ curso.codigo }}">{{ curso.nombre }} ({{ curso.codigo }})</option>
+                 {% endfor %}
+            </select>
+
+            </div>
+            <div class="form-group mb-3">
+              <input type="text" name="txtRfc" id="txtRfc" value="{{ docente.rfc }}" class="form-control" placeholder="RFC" maxlength="13" required>
+
+            </div>
+            <button type="submit" class="btn btn-success w-100">Guardar</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabla de docentes -->
+    <div class="col-md-8">
+      <div class="card shadow-sm">
+        <div class="card-header bg-secondary text-white">
+          <h5 class="mb-0">Lista de Docentes</h5>
+        </div>
+        <div class="card-body table-responsive">
+          <table class="table table-striped table-hover">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Correo</th>
+                <th>Especialidad</th>
+                <th>RFC</th>
+                <th colspan="2">Opciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for d in docentes %}
+              <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ d.id }}</td>
+                <td>{{ d.nombre }}</td>
+                <td>{{ d.correo }}</td>
+                <td>{{ d.especialidad }}</td>
+                <td>{{ d.rfc }}</td>
+                <td><a href="{% url 'edicionDocente' d.id %}" class="btn btn-info btn-sm">Editar</a></td>
+                <td><a href="{% url 'eliminacionDocente' d.id %}" class="btn btn-danger btn-sm btnEliminacion">Eliminar</a></td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="8" class="text-center text-muted">No hay docentes registrados</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

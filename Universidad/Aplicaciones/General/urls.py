@@ -24,4 +24,11 @@ urlpatterns = [
     path('alumnos/edicionAlumno/<str:matricula>/', views.edicionAlumno, name='edicionAlumno'),
     path('alumnos/editarAlumno/', views.editarAlumno, name='editarAlumno'),
     path('alumnos/eliminacionAlumno/<str:matricula>/', views.eliminacionAlumno, name='eliminacionAlumno'),
+
+    # CRUD DOCENTES
+    path('nuevodocente/', views.nuevodocente, name='nuevodocente'),
+    path('docentes/registrarDocente/', views.registrarDocente, name='registrarDocente'),
+    path('docentes/edicionDocente/<str:id>/', views.edicionDocente, name='edicionDocente'),
+    path('docentes/editarDocente/<str:id>/', views.editarDocente, name="editarDocente"),
+    path('docentes/eliminacionDocente/<str:id>/', views.eliminacionDocente, name='eliminacionDocente'),
 ]

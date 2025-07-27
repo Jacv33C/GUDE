@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Curso, Alumno
+from .models import Curso, Alumno, Docente
 
-# LOGIN
+# ---------------- LOGIN ----------------
 def login_view(request):
     error = ""
     if request.method == "POST":
@@ -18,7 +18,7 @@ def login_view(request):
     return render(request, "login.html", {"error": error})
 
 
-# VISTAS BÁSICAS
+# ---------------- VISTAS PRINCIPALES ----------------
 def home(request):
     return render(request, "home.html")
 
@@ -32,7 +32,7 @@ def cargamateria(request):
     return render(request, "cargamateria.html")
 
 
-# MATERIAS
+# ---------------- CRUD MATERIAS ----------------
 def materias(request):
     cursos = Curso.objects.all()
     return render(request, "Materias.html", {"cursos": cursos})
@@ -42,7 +42,6 @@ def registrarMateria(request):
         codigo = request.POST['txtCodigo']
         nombre = request.POST['txtNombre']
         creditos = request.POST['numCreditos']
-
         Curso.objects.create(codigo=codigo, nombre=nombre, creditos=creditos)
     return redirect('materias')
 
@@ -59,7 +58,6 @@ def editarMateria(request):
         codigo = request.POST['txtCodigo']
         nombre = request.POST['txtNombre']
         creditos = request.POST['numCreditos']
-
         curso = Curso.objects.get(codigo=codigo)
         curso.nombre = nombre
         curso.creditos = creditos
@@ -72,7 +70,7 @@ def eliminacionCurso(request, codigo):
     return redirect('materias')
 
 
-# ALUMNOS
+# ---------------- CRUD ALUMNOS ----------------
 def nuevoalumno(request):
     alumnos = Alumno.objects.all()
     return render(request, "nuevoalumno.html", {"alumnos": alumnos})
@@ -84,7 +82,6 @@ def registrarAlumno(request):
         correo = request.POST['txtCorreo']
         curp = request.POST['txtCurp']
         estado = request.POST['selectEstado']
-
         Alumno.objects.create(
             matricula=matricula,
             nombre=nombre,
@@ -106,7 +103,6 @@ def editarAlumno(request):
         correo = request.POST['txtCorreo']
         curp = request.POST['txtCurp']
         estado = request.POST['selectEstado']
-
         alumno = Alumno.objects.get(matricula=matricula)
         alumno.nombre = nombre
         alumno.correo = correo
@@ -119,3 +115,55 @@ def eliminacionAlumno(request, matricula):
     alumno = get_object_or_404(Alumno, matricula=matricula)
     alumno.delete()
     return redirect('nuevoalumno')
+
+
+# ---------------- CRUD DOCENTES ----------------
+
+def nuevodocente(request):
+    docentes = Docente.objects.all()
+    cursos = Curso.objects.all()  # Traer todas las materias
+    return render(request, "nuevodocente.html", {"docentes": docentes, "cursos": cursos})
+
+def registrarDocente(request):
+    if request.method == "POST":
+        id = request.POST['txtId']
+        nombre = request.POST['txtNombre']
+        correo = request.POST['txtCorreo']
+        especialidad = request.POST.get('txtEspecialidad', '')
+        rfc = request.POST['txtRfc']
+        Docente.objects.create(
+            id=id,
+            nombre=nombre,
+            correo=correo,
+            especialidad=especialidad,
+            rfc=rfc
+        )
+    return redirect('nuevodocente')
+
+def edicionDocente(request, id):
+    docente = get_object_or_404(Docente, id=id)
+    docentes = Docente.objects.all()
+    return render(request, "edicionDocente.html", {"docente": docente, "docentes": docentes})
+
+def editarDocente(request, id):
+    if request.method == "POST":
+        nombre = request.POST['txtNombre']
+        correo = request.POST['txtCorreo']
+        especialidad = request.POST.get('txtEspecialidad', '')
+        rfc = request.POST['txtRFC']  # <-- Aquí debe coincidir el nombre con el formulario
+
+        docente = get_object_or_404(Docente, id=id)
+        docente.nombre = nombre
+        docente.correo = correo
+        docente.especialidad = especialidad
+        docente.rfc = rfc
+        docente.save()
+
+    return redirect('nuevodocente')
+
+
+
+def eliminacionDocente(request, id):
+    docente = get_object_or_404(Docente, id=id)
+    docente.delete()
+    return redirect('nuevodocente')

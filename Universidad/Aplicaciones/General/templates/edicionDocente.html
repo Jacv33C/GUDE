@@ -1,0 +1,36 @@
+{% extends "./base.html" %}
+
+{% block body %}
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-md-4 offset-md-4">
+      <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+          <h3 class="mb-0">Edición de Docente</h3>
+        </div>
+        <div class="card-body">
+          <form action="{% url 'editarDocente' docente.id %}" method="post">
+            {% csrf_token %}
+            <div class="form-group mb-3">
+              <input type="text" name="txtID" id="txtID" value="{{ docente.id }}" class="form-control" placeholder="ID" maxlength="9" readonly required>
+            </div>
+            <div class="form-group mb-3">
+              <input type="text" name="txtNombre" id="txtNombre" value="{{ docente.nombre }}" class="form-control" placeholder="Nombre completo" maxlength="100" required>
+            </div>
+            <div class="form-group mb-3">
+              <input type="email" name="txtCorreo" id="txtCorreo" value="{{ docente.correo }}" class="form-control" placeholder="Correo electrónico" required>
+            </div>
+            <div class="form-group mb-3">
+              <input type="text" name="txtEspecialidad" id="txtEspecialidad" value="{{ docente.especialidad }}" class="form-control" placeholder="Especialidad" maxlength="100">
+            </div>
+            <div class="form-group mb-3">
+              <input type="text" name="txtRFC" id="txtRFC" value="{{ docente.rfc }}" class="form-control" placeholder="RFC" maxlength="13" required>
+            </div>
+            <button type="submit" class="btn btn-success w-100">Guardar Cambios</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
