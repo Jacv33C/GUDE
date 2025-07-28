@@ -33,4 +33,5 @@ urlpatterns = [
     path('docentes/edicionDocente/<str:id>/', views.edicionDocente, name='edicionDocente'),
     path('docentes/editarDocente/<str:id>/', views.editarDocente, name="editarDocente"),
     path('docentes/eliminacionDocente/<str:id>/', views.eliminacionDocente, name='eliminacionDocente'),
+    path('baseDocentes/', views.baseDocentes, name="baseDocentes")
 ]

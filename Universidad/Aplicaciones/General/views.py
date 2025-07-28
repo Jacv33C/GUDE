@@ -64,6 +64,9 @@ def cerrar_sesion(request):
     request.session.flush()  
     return redirect('login') 
 
+def baseDocentes(request):
+    return render(request, "baseDocentes.html")
+
 
 
 # ---------------- CRUD MATERIAS ----------------
