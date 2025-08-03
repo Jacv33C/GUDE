@@ -1,30 +1,38 @@
-{% extends "./baseAlumnos.html" %}
+{% extends "./baseDocentes.html" %}
 
 {% block body %}
 <div class="container mt-5 d-flex justify-content-center">
   <div class="col-md-6">
     <div class="card shadow-sm">
       <div class="card-header bg-secondary text-white text-center">
-        <h4>Bienvenido(a)</h4>
+        <h4>Información del Docente</h4>
       </div>
       <div class="card-body">
         <table class="table table-bordered mb-0">
           <tbody>
             <tr>
-              <th>Matrícula</th>
-              <td>{{ alumno.matricula }}</td>
+              <th>ID</th>
+              <td>{{ docente.id }}</td>
             </tr>
             <tr>
               <th>Nombre</th>
-              <td>{{ alumno.nombre }}</td>
+              <td>{{ docente.nombre }}</td>
             </tr>
             <tr>
               <th>Correo</th>
-              <td>{{ alumno.correo }}</td>
+              <td>{{ docente.correo }}</td>
             </tr>
             <tr>
-              <th>CURP</th>
-              <td>{{ alumno.curp }}</td>
+              <th>Especialidad</th>
+              <td>{{ docente.especialidad }}</td>
+            </tr>
+            <tr>
+              <th>RFC</th>
+              <td>{{ docente.rfc }}</td>
+            </tr>
+            <tr>
+              <th>Contraseña</th>
+              <td><code>{{ docente.password }}</code></td>
             </tr>
           </tbody>
         </table>

@@ -66,23 +66,15 @@
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
           <ul class="navbar-nav ms-auto">
             <li class="nav-item">
-              <a class="nav-link" href="#">Home</a>
+              <a class="nav-link" href="{% url 'homebasedocentes'%}">Inicio</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Datos Generales</a>
+              <a class="nav-link" href="{% url 'datosgeneralesdocentes'%}">Datos Generales</a>
             </li>
             <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Materias
-              </a>
-              <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#">Carga de Materias</a></li>
-                <li><a class="dropdown-item" href="#">Ver Materias</a></li>
-                <li><a class="dropdown-item" href="#">Something else here</a></li>
-              </ul>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Historial Academico</a>
+              <a class="nav-link" href="{% url 'verMateriasDocente'%}">Materias</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="{% url 'cerrar_sesion' %}">Cerrar Sesion</a>
@@ -94,7 +86,9 @@
     </nav>
 
     <div class="container-content">
-        {% block body %}{% endblock %}
+        {% block body %}
+        
+        {% endblock %}
     </div>
 
  

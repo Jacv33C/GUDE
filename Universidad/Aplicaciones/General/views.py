@@ -1,5 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Curso, Alumno, Docente
+from django.http import JsonResponse
+import random
+import string
 
 def login_view(request):
     error = ""
@@ -153,16 +156,44 @@ def eliminacionAlumno(request, matricula):
     alumno.delete()
     return redirect('nuevoalumno')
 
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Alumno
+
 def datosgeneralesalumnos(request):
-    return render(request, "datosgeneralesalumnos.html")
+    if request.session.get("tipo_usuario") != "alumno":
+        return redirect('login')
+
+    alumno_id = request.session.get("alumno_id")
+    alumno = get_object_or_404(Alumno, matricula=alumno_id)
+
+    return render(request, "datosgeneralesalumnos.html", {"alumno": alumno})
+
+
 
 
 # ---------------- CRUD DOCENTES ----------------
+
+def generar_contrasena(longitud=6):
+    caracteres = string.ascii_letters + string.digits
+    return ''.join(random.choices(caracteres, k=longitud))
 
 def nuevodocente(request):
     docentes = Docente.objects.all()
     cursos = Curso.objects.all()  # Traer todas las materias
     return render(request, "nuevodocente.html", {"docentes": docentes, "cursos": cursos})
+
+def buscar_materias(request):
+    term = request.GET.get('term', '')
+    cursos = Curso.objects.filter(nombre__icontains=term) | Curso.objects.filter(codigo__icontains=term)
+
+    resultados = []
+    for curso in cursos[:10]:  # máximo 10 sugerencias
+        resultados.append({
+            'label': f"{curso.nombre} ({curso.codigo})",  # lo que se muestra al usuario
+            'value': curso.codigo  # lo que se guarda en el input
+        })
+
+    return JsonResponse(resultados, safe=False)
 
 def registrarDocente(request):
     if request.method == "POST":
@@ -171,26 +202,29 @@ def registrarDocente(request):
         correo = request.POST['txtCorreo']
         especialidad = request.POST.get('txtEspecialidad', '')
         rfc = request.POST['txtRfc']
+        contrasena = generar_contrasena()
+
         Docente.objects.create(
             id=id,
             nombre=nombre,
             correo=correo,
             especialidad=especialidad,
-            rfc=rfc
+            rfc=rfc,
+            password=contrasena
         )
     return redirect('nuevodocente')
 
 def edicionDocente(request, id):
     docente = get_object_or_404(Docente, id=id)
-    docentes = Docente.objects.all()
-    return render(request, "edicionDocente.html", {"docente": docente, "docentes": docentes})
+    cursos = Curso.objects.all()
+    return render(request, "edicionDocente.html", {"docente": docente, "cursos": cursos})
 
 def editarDocente(request, id):
     if request.method == "POST":
         nombre = request.POST['txtNombre']
         correo = request.POST['txtCorreo']
         especialidad = request.POST.get('txtEspecialidad', '')
-        rfc = request.POST['txtRFC']  # <-- Aquí debe coincidir el nombre con el formulario
+        rfc = request.POST['txtRfc']
 
         docente = get_object_or_404(Docente, id=id)
         docente.nombre = nombre
@@ -201,9 +235,28 @@ def editarDocente(request, id):
 
     return redirect('nuevodocente')
 
-
-
 def eliminacionDocente(request, id):
     docente = get_object_or_404(Docente, id=id)
     docente.delete()
     return redirect('nuevodocente')
+
+def detalle_docente(request, id):
+    docente = get_object_or_404(Docente, id=id)
+    return render(request, "detalle_docente.html", {"docente": docente})
+
+def homebasedocentes(request):
+    return render(request, 'homebasedocentes.html')
+
+def verMateriasDocente(request):
+    return render(request, 'verMateriasDocente.html')
+
+# Aquí agrego la lógica para que "datosgeneralesdocentes" funcione igual que en alumnos:
+def datosgeneralesdocentes(request):
+    # Si no está logueado como docente, redirige a login (ajusta según tu sistema)
+    if request.session.get("tipo_usuario") != "docente":
+        return redirect('login')
+    
+    docente_id = request.session.get("docente_id")
+    docente = get_object_or_404(Docente, id=docente_id)
+
+    return render(request, 'datosgeneralesdocentes.html', {"docente": docente})

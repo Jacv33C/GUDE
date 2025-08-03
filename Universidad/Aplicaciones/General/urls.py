@@ -31,7 +31,13 @@ urlpatterns = [
     path('nuevodocente/', views.nuevodocente, name='nuevodocente'),
     path('docentes/registrarDocente/', views.registrarDocente, name='registrarDocente'),
     path('docentes/edicionDocente/<str:id>/', views.edicionDocente, name='edicionDocente'),
+    path('buscar-materias/', views.buscar_materias, name='buscar_materias'),
     path('docentes/editarDocente/<str:id>/', views.editarDocente, name="editarDocente"),
     path('docentes/eliminacionDocente/<str:id>/', views.eliminacionDocente, name='eliminacionDocente'),
-    path('baseDocentes/', views.baseDocentes, name="baseDocentes")
+    path('baseDocentes/', views.baseDocentes, name="baseDocentes"),
+    path('homebasedocentes/', views.homebasedocentes, name = "homebasedocentes"),
+    path('verMateriasDocente/', views.verMateriasDocente, name = "verMateriasDocente"),
+    path('datosgeneralesdocentes/', views.datosgeneralesdocentes, name = 'datosgeneralesdocentes'),
+    path('docente/<str:id>/', views.detalle_docente, name='detalle_docente'),
+
 ]

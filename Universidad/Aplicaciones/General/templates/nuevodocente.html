@@ -4,7 +4,7 @@
 {% block body %}
 <div class="container mt-4">
   <div class="row">
-    <!-- Formulario para agregar nuevo docente -->
+    <!-- Formulario -->
     <div class="col-md-4">
       <div class="card shadow-sm">
         <div class="card-header bg-primary text-white">
@@ -14,8 +14,7 @@
           <form action="{% url 'registrarDocente' %}" method="post">
             {% csrf_token %}
             <div class="form-group mb-3">
-          <input type="text" name="txtId" id="txtId" class="form-control" placeholder="ID" maxlength="9" required>
-
+              <input type="text" name="txtId" id="txtId" class="form-control" placeholder="ID" maxlength="9" required>
             </div>
             <div class="form-group mb-3">
               <input type="text" name="txtNombre" id="txtNombre" class="form-control" placeholder="Nombre completo" maxlength="100" required />
@@ -24,25 +23,20 @@
               <input type="email" name="txtCorreo" id="txtCorreo" class="form-control" placeholder="Correo electrónico" required />
             </div>
             <div class="form-group mb-3">
-              <select name="txtEspecialidad" id="txtEspecialidad" class="form-control">
-                <option value="" selected disabled>Selecciona una materia</option>
-                {% for curso in cursos %}
-                 <option value="{{ curso.codigo }}">{{ curso.nombre }} ({{ curso.codigo }})</option>
-                 {% endfor %}
-            </select>
-
+              <input type="text" name="txtEspecialidad" id="txtEspecialidad" class="form-control" placeholder="Buscar materia por nombre o código" required autocomplete="off">
+              <div id="noResults" class="text-danger mt-2" style="display: none;">No hay materias coincidentes.</div>
             </div>
             <div class="form-group mb-3">
-              <input type="text" name="txtRfc" id="txtRfc" value="{{ docente.rfc }}" class="form-control" placeholder="RFC" maxlength="13" required>
-
+              <input type="text" name="txtRfc" id="txtRfc" class="form-control" placeholder="RFC" maxlength="13" required>
             </div>
+            <!-- La contraseña no se pide ni se muestra -->
             <button type="submit" class="btn btn-success w-100">Guardar</button>
           </form>
         </div>
       </div>
     </div>
 
-    <!-- Tabla de docentes -->
+    <!-- Tabla -->
     <div class="col-md-8">
       <div class="card shadow-sm">
         <div class="card-header bg-secondary text-white">
@@ -85,4 +79,33 @@
     </div>
   </div>
 </div>
+
+<!-- Autocompletado -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+<script>
+  $(function() {
+    $("#txtEspecialidad").autocomplete({
+      source: function(request, response) {
+        $.ajax({
+          url: "{% url 'buscar_materias' %}",
+          dataType: "json",
+          data: {
+            term: request.term
+          },
+          success: function(data) {
+            if (data.length === 0) {
+              $("#noResults").show();
+            } else {
+              $("#noResults").hide();
+            }
+            response(data);
+          }
+        });
+      },
+      minLength: 2
+    });
+  });
+</script>
 {% endblock %}
