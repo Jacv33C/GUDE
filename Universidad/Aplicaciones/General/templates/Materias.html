@@ -2,6 +2,48 @@
 {% load static %}
 
 {% block body %}
+<style>
+  body {
+    background-color: #f5f5fa;
+  }
+  .card-header.bg-primary {
+    background-color: #8e44ad !important; /* Morado claro y vivo */
+    color: white !important;
+  }
+  .card-header.bg-secondary {
+    background-color: #a569bd !important; /* Morado complementario */
+    color: white !important;
+  }
+  /* Botón Guardar morado */
+  .btn-purple {
+    background-color: #2e5a1cac;
+    color: white;
+    transition: 0.3s ease;
+    border: none;
+  }
+  .btn-purple:hover {
+    background-color: #8e44ad;
+    color: white;
+  }
+  /* Botón Editar morado claro */
+  .btn-outline-purple {
+    color: #8e44ad;
+    border-color: #8e44ad;
+  }
+  .btn-outline-purple:hover {
+    background-color: #8e44ad;
+    color: white;
+  }
+  .btn-outline-purple-dark {
+    color: #6c3483;
+    border-color: #6c3483;
+  }
+  .btn-outline-purple-dark:hover {
+    background-color: #6c3483;
+    color: white;
+  }
+</style>
+
 <div class="container mt-4">
   <div class="row">
     <div class="col-md-4">
@@ -21,7 +63,7 @@
             <div class="form-group mb-3">
               <input type="number" name="numCreditos" id="numCreditos" class="form-control" placeholder="Créditos" min="1" max="9" value="1" required />
             </div>
-            <button type="submit" class="btn btn-success w-100">Guardar</button>
+            <button type="submit" class="btn btn-purple w-100">Guardar</button>
           </form>
         </div>
       </div>
@@ -50,8 +92,12 @@
                 <td>{{ c.codigo }}</td>
                 <td>{{ c.nombre }}</td>
                 <td>{{ c.creditos }}</td>
-                <td><a href="{% url 'edicionCurso' c.codigo %}" class="btn btn-info btn-sm">Editar</a></td>
-                <td><a href="{% url 'eliminacionCurso' c.codigo %}" class="btn btn-danger btn-sm btnEliminacion">Eliminar</a></td>
+                <td>
+                  <a href="{% url 'edicionCurso' c.codigo %}" class="btn btn-outline-purple btn-sm w-100 mb-1">Editar</a>
+                </td>
+                <td>
+                  <a href="{% url 'eliminacionCurso' c.codigo %}" class="btn btn-outline-purple-dark btn-sm w-100 btnEliminacion">Eliminar</a>
+                </td>
               </tr>
               {% empty %}
               <tr>

@@ -16,14 +16,14 @@ from django.db import models
 class Docente(models.Model):
     id = models.CharField(primary_key=True, max_length=9)
     nombre = models.CharField(max_length=100)
-    correo = models.EmailField(unique=True)
-    especialidad = models.CharField(max_length=100, blank=True, null=True)
-    rfc = models.CharField(max_length=13, unique=True)
-    password = models.CharField(max_length=6, null=True, blank=True)
-
+    correo = models.EmailField()
+    rfc = models.CharField(max_length=13)
+    password = models.CharField(max_length=50, default='123456')
+    cursos = models.ManyToManyField('Curso', related_name='docentes')
 
     def __str__(self):
-        return f"{self.nombre} ({self.id})"
+        return self.nombre
+
 
 # Alumnos
 class Alumno(models.Model):
@@ -38,6 +38,8 @@ class Alumno(models.Model):
         ('sabatico', 'Sabático'),
     ]
     estado = models.CharField(max_length=10, choices=ESTADOS, default='activo')
+
+    cursos = models.ManyToManyField('Curso', related_name='alumnos', blank=True)
 
     def __str__(self):
         return f"{self.nombre} - {self.matricula}"

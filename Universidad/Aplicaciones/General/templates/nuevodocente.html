@@ -2,6 +2,49 @@
 {% load static %}
 
 {% block body %}
+<style>
+  body {
+    background-color: #f5f5fa;
+  }
+  .card-header.bg-primary {
+    background-color: #8e44ad !important; /* Morado claro y vivo */
+    color: white !important;
+  }
+  .card-header.bg-secondary {
+    background-color: #a569bd !important; /* Morado complementario */
+    color: white !important;
+  }
+  /* Botón Guardar morado */
+  .btn-purple {
+    background-color: #2e5a1cac;
+    color: white;
+    transition: 0.3s ease;
+    border: none;
+  }
+  .btn-purple:hover {
+    background-color: #8e44ad;
+    color: white;
+  }
+  /* Botones info morados claros */
+  .btn-info-purple {
+    color: #8e44ad;
+    border-color: #8e44ad;
+  }
+  .btn-info-purple:hover {
+    background-color: #8e44ad;
+    color: white;
+  }
+  /* Botón eliminar morado oscuro */
+  .btn-outline-purple-dark {
+    color: #6c3483;
+    border-color: #6c3483;
+  }
+  .btn-outline-purple-dark:hover {
+    background-color: #6c3483;
+    color: white;
+  }
+</style>
+
 <div class="container mt-4">
   <div class="row">
     <!-- Formulario -->
@@ -23,20 +66,15 @@
               <input type="email" name="txtCorreo" id="txtCorreo" class="form-control" placeholder="Correo electrónico" required />
             </div>
             <div class="form-group mb-3">
-              <input type="text" name="txtEspecialidad" id="txtEspecialidad" class="form-control" placeholder="Buscar materia por nombre o código" required autocomplete="off">
-              <div id="noResults" class="text-danger mt-2" style="display: none;">No hay materias coincidentes.</div>
-            </div>
-            <div class="form-group mb-3">
               <input type="text" name="txtRfc" id="txtRfc" class="form-control" placeholder="RFC" maxlength="13" required>
             </div>
             <!-- La contraseña no se pide ni se muestra -->
-            <button type="submit" class="btn btn-success w-100">Guardar</button>
+            <button type="submit" class="btn btn-purple w-100">Guardar</button>
           </form>
         </div>
       </div>
     </div>
 
-    <!-- Tabla -->
     <div class="col-md-8">
       <div class="card shadow-sm">
         <div class="card-header bg-secondary text-white">
@@ -50,9 +88,8 @@
                 <th>ID</th>
                 <th>Nombre</th>
                 <th>Correo</th>
-                <th>Especialidad</th>
                 <th>RFC</th>
-                <th colspan="2">Opciones</th>
+                <th colspan="3">Opciones</th>
               </tr>
             </thead>
             <tbody>
@@ -62,10 +99,16 @@
                 <td>{{ d.id }}</td>
                 <td>{{ d.nombre }}</td>
                 <td>{{ d.correo }}</td>
-                <td>{{ d.especialidad }}</td>
                 <td>{{ d.rfc }}</td>
-                <td><a href="{% url 'edicionDocente' d.id %}" class="btn btn-info btn-sm">Editar</a></td>
-                <td><a href="{% url 'eliminacionDocente' d.id %}" class="btn btn-danger btn-sm btnEliminacion">Eliminar</a></td>
+                <td>
+                  <a href="{% url 'asignarMaterias' d.id %}" class="btn btn-info-purple btn-sm w-100 mb-1">Agregar</a>
+                </td>
+                <td>
+                  <a href="{% url 'edicionDocente' d.id %}" class="btn btn-info-purple btn-sm w-100 mb-1">Editar</a>
+                </td>
+                <td>
+                  <a href="{% url 'eliminacionDocente' d.id %}" class="btn btn-outline-purple-dark btn-sm w-100 btnEliminacion">Eliminar</a>
+                </td>
               </tr>
               {% empty %}
               <tr>
@@ -79,33 +122,4 @@
     </div>
   </div>
 </div>
-
-<!-- Autocompletado -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
-<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
-<script>
-  $(function() {
-    $("#txtEspecialidad").autocomplete({
-      source: function(request, response) {
-        $.ajax({
-          url: "{% url 'buscar_materias' %}",
-          dataType: "json",
-          data: {
-            term: request.term
-          },
-          success: function(data) {
-            if (data.length === 0) {
-              $("#noResults").show();
-            } else {
-              $("#noResults").hide();
-            }
-            response(data);
-          }
-        });
-      },
-      minLength: 2
-    });
-  });
-</script>
 {% endblock %}

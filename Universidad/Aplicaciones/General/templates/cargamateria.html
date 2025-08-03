@@ -1,6 +1,82 @@
-{% extends "./basealumnos.html" %}
-
+{% extends './basealumnos.html' %}
 
 {% block body %}
-<p>Estoy en la carga de materias</p>
+<div class="container mt-4">
+  <h3>Cargar Materias para {{ alumno.nombre }}</h3>
+
+  <form method="post">
+    {% csrf_token %}
+    <div class="card mb-4">
+      <div class="card-header bg-primary text-white">Materias Disponibles para Inscribirse</div>
+      <div class="card-body table-responsive">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th>Seleccionar</th>
+              <th>Código</th>
+              <th>Nombre</th>
+              <th>Créditos</th>
+              <th>Docentes</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for curso in cursos_disponibles %}
+            <tr>
+              <td><input type="checkbox" name="cursos" value="{{ curso.codigo }}"></td>
+              <td>{{ curso.codigo }}</td>
+              <td>{{ curso.nombre }}</td>
+              <td>{{ curso.creditos }}</td>
+              <td>
+                {% for docente in curso.docentes.all %}
+                  {{ docente.nombre }}{% if not forloop.last %}, {% endif %}
+                {% empty %}
+                  Sin docentes asignados
+                {% endfor %}
+              </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="5" class="text-center">No hay materias disponibles para inscribirse</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Inscribirse en materias seleccionadas</button>
+  </form>
+
+  <div class="card mt-5">
+    <div class="card-header bg-secondary text-white">Materias Inscritas</div>
+    <div class="card-body table-responsive">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Código</th>
+            <th>Nombre</th>
+            <th>Créditos</th>
+            <th>Docentes</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for curso in cursos_inscritos %}
+          <tr>
+            <td>{{ curso.codigo }}</td>
+            <td>{{ curso.nombre }}</td>
+            <td>{{ curso.creditos }}</td>
+            <td>
+              {% for docente in curso.docentes.all %}
+                {{ docente.nombre }}{% if not forloop.last %}, {% endif %}
+              {% empty %}
+                Sin docentes asignados
+              {% endfor %}
+            </td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="4" class="text-center">No estás inscrito en ninguna materia</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
 {% endblock %}

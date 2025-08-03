@@ -18,6 +18,13 @@ urlpatterns = [
     path('materias/eliminacionCurso/<str:codigo>/', views.eliminacionCurso, name='eliminacionCurso'),
     path('materias/edicionCurso/<str:codigo>/', views.edicionCurso, name='edicionCurso'),
     path('materias/editarMateria/', views.editarMateria, name='editarMateria'),
+ path('asignarMaterias/<str:docente_id>/', views.asignarMaterias, name='asignarMaterias'),
+ path('ruta-guardardocente/', views.guardardocente, name='guardardocente'),
+ 
+
+
+
+
 
     # CRUD ALUMNOS
     path('nuevoalumno/', views.nuevoalumno, name='nuevoalumno'),
@@ -26,6 +33,8 @@ urlpatterns = [
     path('alumnos/editarAlumno/', views.editarAlumno, name='editarAlumno'),
     path('alumnos/eliminacionAlumno/<str:matricula>/', views.eliminacionAlumno, name='eliminacionAlumno'),
     path('datosgeneralesalumnos', views.datosgeneralesalumnos, name="datosgeneralesalumnos"),
+    path('alumno/cargar-materias/', views.cargar_materias_alumno, name='cargar_materias_alumno'),
+    path('alumno/inscribir-materias/', views.inscribirMateriasAlumno, name='inscribirMateriasAlumno'),
 
     # CRUD DOCENTES
     path('nuevodocente/', views.nuevodocente, name='nuevodocente'),
@@ -39,5 +48,6 @@ urlpatterns = [
     path('verMateriasDocente/', views.verMateriasDocente, name = "verMateriasDocente"),
     path('datosgeneralesdocentes/', views.datosgeneralesdocentes, name = 'datosgeneralesdocentes'),
     path('docente/<str:id>/', views.detalle_docente, name='detalle_docente'),
+   path('docente/<str:docente_id>/desasignar/<str:codigo>/', views.desasignar_materia, name='desasignar_materia'),
 
 ]

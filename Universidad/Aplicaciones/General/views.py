@@ -3,6 +3,7 @@ from .models import Curso, Alumno, Docente
 from django.http import JsonResponse
 import random
 import string
+from django.db.models import Q
 
 def login_view(request):
     error = ""
@@ -167,6 +168,60 @@ def datosgeneralesalumnos(request):
     alumno = get_object_or_404(Alumno, matricula=alumno_id)
 
     return render(request, "datosgeneralesalumnos.html", {"alumno": alumno})
+def cargar_materias_alumno(request):
+    if request.session.get("tipo_usuario") != "alumno":
+        return redirect('login')
+
+    alumno_id = request.session.get("alumno_id")
+    alumno = get_object_or_404(Alumno, matricula=alumno_id)
+
+    # Materias disponibles para inscribirse: solo aquellas que tienen docentes asignados
+    cursos_disponibles = Curso.objects.filter(docentes__isnull=False).exclude(alumnos=alumno).distinct()
+
+    # Materias ya inscritas por el alumno
+    cursos_inscritos = alumno.cursos.all()
+
+    if request.method == 'POST':
+        cursos_seleccionados = request.POST.getlist('cursos')
+        for codigo in cursos_seleccionados:
+            curso = get_object_or_404(Curso, codigo=codigo)
+            alumno.cursos.add(curso)
+        return redirect('cargar_materias_alumno')
+
+    context = {
+        'alumno': alumno,
+        'cursos_disponibles': cursos_disponibles,
+        'cursos_inscritos': cursos_inscritos,
+    }
+    return render(request, 'cargar_materias_alumno.html', context)
+def inscribirMateriasAlumno(request):
+    if request.session.get("tipo_usuario") != "alumno":
+        return redirect('login')
+
+    alumno_id = request.session.get("alumno_id")
+    alumno = get_object_or_404(Alumno, matricula=alumno_id)
+
+    if request.method == 'POST':
+        cursos_seleccionados = request.POST.getlist('cursos')
+        for codigo in cursos_seleccionados:
+            curso = get_object_or_404(Curso, codigo=codigo)
+            if curso not in alumno.cursos.all():
+                alumno.cursos.add(curso)
+        return redirect('inscribirMateriasAlumno')
+
+    cursos_inscritos = alumno.cursos.all()
+    cursos_disponibles = Curso.objects.exclude(
+        codigo__in=cursos_inscritos.values_list('codigo', flat=True)
+    )
+
+    context = {
+        'alumno': alumno,
+        'cursos_disponibles': cursos_disponibles,
+        'cursos_inscritos': cursos_inscritos,
+    }
+
+    return render(request, 'inscribirMateriasAlumno.html', context)
+
 
 
 
@@ -197,22 +252,23 @@ def buscar_materias(request):
 
 def registrarDocente(request):
     if request.method == "POST":
-        id = request.POST['txtId']
+        id_docente = request.POST['txtId']
         nombre = request.POST['txtNombre']
         correo = request.POST['txtCorreo']
-        especialidad = request.POST.get('txtEspecialidad', '')
         rfc = request.POST['txtRfc']
-        contrasena = generar_contrasena()
 
-        Docente.objects.create(
-            id=id,
+        docente = Docente(
+            id=id_docente,
             nombre=nombre,
             correo=correo,
-            especialidad=especialidad,
-            rfc=rfc,
-            password=contrasena
+            rfc=rfc
         )
-    return redirect('nuevodocente')
+        docente.save()
+
+        return redirect('nuevodocente')
+
+    
+
 
 def edicionDocente(request, id):
     docente = get_object_or_404(Docente, id=id)
@@ -260,3 +316,92 @@ def datosgeneralesdocentes(request):
     docente = get_object_or_404(Docente, id=docente_id)
 
     return render(request, 'datosgeneralesdocentes.html', {"docente": docente})
+
+
+
+from django.shortcuts import render, get_object_or_404, redirect
+
+def asignarMaterias(request, docente_id):
+    docente = get_object_or_404(Docente, pk=docente_id)
+
+    if request.method == 'POST':
+        cursos_seleccionados = request.POST.getlist('cursos')
+        for codigo in cursos_seleccionados:
+            curso = get_object_or_404(Curso, codigo=codigo)
+            if curso not in docente.cursos.all():
+                docente.cursos.add(curso)
+        return redirect('asignarMaterias', docente_id=docente.id)
+
+    cursos_asignados_a_otros = Curso.objects.filter(docentes__isnull=False).exclude(docentes=docente).distinct()
+    cursos_asignados_al_docente = docente.cursos.all()
+
+    cursos_disponibles = Curso.objects.exclude(
+        codigo__in=cursos_asignados_a_otros.values_list('codigo', flat=True)
+    ).exclude(
+        codigo__in=cursos_asignados_al_docente.values_list('codigo', flat=True)
+    )
+
+    # Búsqueda por matrícula (código de curso)
+    resultado_busqueda = None
+    if 'buscar' in request.GET:
+        codigo_busqueda = request.GET.get('buscar').strip()
+        try:
+            curso_encontrado = Curso.objects.get(codigo=codigo_busqueda)
+            docentes_asignados = curso_encontrado.docentes.all()
+            resultado_busqueda = {
+                'curso': curso_encontrado,
+                'docentes': docentes_asignados
+            }
+        except Curso.DoesNotExist:
+            resultado_busqueda = {'error': 'No se encontró ninguna materia con esa matrícula.'}
+
+    context = {
+        'docente': docente,
+        'cursos': cursos_disponibles,
+        'cursos_docente': cursos_asignados_al_docente,
+        'resultado_busqueda': resultado_busqueda,
+    }
+
+    return render(request, 'asignarMaterias.html', context)
+
+
+
+def desasignar_materia(request, docente_id, codigo):
+    docente = get_object_or_404(Docente, id=docente_id)
+    curso = get_object_or_404(Curso, codigo=codigo)
+    docente.cursos.remove(curso)
+    return redirect('asignarMaterias', docente_id=docente.id)
+
+def generar_id_aleatorio(longitud=6):
+    caracteres = string.ascii_letters + string.digits
+    return ''.join(random.choices(caracteres, k=longitud))
+def guardardocente(request):
+    if request.method == 'POST':
+        nombre = request.POST.get('txtNombre')
+        correo = request.POST.get('txtCorreo')
+        especialidad = request.POST.get('txtEspecialidad', '')  # si existe en modelo
+        rfc = request.POST.get('txtRfc')
+
+        # Generar un id aleatorio o usar alguna lógica para el ID
+        nuevo_id = generar_id_aleatorio(6)
+
+        # Crear y guardar el docente
+        docente = Docente(
+            id=nuevo_id,
+            nombre=nombre,
+            correo=correo,
+            rfc=rfc,
+        )
+
+        # Si tienes un campo especialidad en tu modelo Docente, asignarlo
+        if hasattr(docente, 'especialidad'):
+            docente.especialidad = especialidad
+
+        docente.save()
+
+        return redirect('nuevodocente')
+
+    # Si se accede con GET o de forma incorrecta, redirigir a nuevodocente
+    return redirect('nuevodocente')
+
+
