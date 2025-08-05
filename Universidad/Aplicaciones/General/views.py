@@ -1,9 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Curso, Alumno, Docente
+from .models import Curso, Alumno, Docente, Tarea
 from django.http import JsonResponse
+from django.contrib import messages
 import random
 import string
 from django.db.models import Q
+from django.utils import timezone
 
 def login_view(request):
     error = ""
@@ -319,8 +321,6 @@ def datosgeneralesdocentes(request):
 
 
 
-from django.shortcuts import render, get_object_or_404, redirect
-
 def asignarMaterias(request, docente_id):
     docente = get_object_or_404(Docente, pk=docente_id)
 
@@ -404,4 +404,67 @@ def guardardocente(request):
     # Si se accede con GET o de forma incorrecta, redirigir a nuevodocente
     return redirect('nuevodocente')
 
+def verMateriasDocente(request, docente_id):
+    docente = get_object_or_404(Docente, id=docente_id)
+    materias = docente.cursos.all()  # o el related_name que tengas
+
+    return render(request, 'verMateriasDocente.html', {
+        'docente': docente,
+        'materias': materias
+        
+    })
+def baseDocentes(request):
+    docentes = Docente.objects.all()
+    return render(request, 'baseDocentes.html', {'docentes': docentes})
+def listarMateriasConTareas(request):
+    # Validar que sea docente
+    if request.session.get("tipo_usuario") != "docente":
+        return redirect('login')
+
+    docente_id = request.session.get("docente_id")
+    docente = get_object_or_404(Docente, id=docente_id)
+
+    # Obtener cursos con sus tareas
+    cursos = docente.cursos.prefetch_related('tareas').all()
+
+    # Renderizar template dentro de carpeta General
+    return render(request, 'verMateriasDocente.html', {'docente': docente, 'cursos': cursos})
+
+
+
+def agregarTarea(request, curso_codigo):
+    curso = get_object_or_404(Curso, codigo=curso_codigo)
+
+    if request.method == 'POST':
+        titulo = request.POST.get('titulo')
+        descripcion = request.POST.get('descripcion', '')
+        fecha_entrega_str = request.POST.get('fecha_entrega')
+
+        if titulo and fecha_entrega_str:
+            try:
+                fecha_entrega = timezone.datetime.strptime(fecha_entrega_str, '%Y-%m-%d').date()
+            except ValueError:
+                fecha_entrega = timezone.now().date()
+
+            Tarea.objects.create(
+                curso=curso,
+                titulo=titulo,
+                descripcion=descripcion,
+                fecha_entrega=fecha_entrega
+            )
+            # Redirigir a verMateriasDocente con el id del docente desde sesión
+            docente_id = request.session.get('docente_id')
+            return redirect('verMateriasDocente', docente_id=docente_id)
+
+    return render(request, 'Tareas.html', {'curso': curso})
+def editar_tarea(request, id):
+    # lógica para editar tarea por ID
+    pass
+
+def eliminar_tarea(request, id):
+    tarea = get_object_or_404(Tarea, id=id)
+    tarea.delete()
+    messages.success(request, "La tarea fue eliminada correctamente.")
+    # Redirige a donde quieras después de eliminar, por ejemplo a la lista de materias o tareas
+    return redirect('verMateriasDocente', request.session.get('docente_id'))
 

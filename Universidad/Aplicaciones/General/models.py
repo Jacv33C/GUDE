@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 # Materias
 class Curso(models.Model):
@@ -7,10 +8,8 @@ class Curso(models.Model):
     creditos = models.PositiveSmallIntegerField()
 
     def __str__(self):
-        texto = "{0} ({1})"
-        return texto.format(self.nombre, self.creditos)
+        return f"{self.nombre} ({self.creditos})"
 
-from django.db import models
 
 # Docentes
 class Docente(models.Model):
@@ -43,3 +42,16 @@ class Alumno(models.Model):
 
     def __str__(self):
         return f"{self.nombre} - {self.matricula}"
+
+
+
+from django.db import models
+
+class Tarea(models.Model):
+    curso = models.ForeignKey(Curso, related_name='tareas', on_delete=models.CASCADE)
+    titulo = models.CharField(max_length=100)
+    descripcion = models.TextField(blank=True)
+    fecha_entrega = models.DateField(default=timezone.now)
+
+    def __str__(self):
+        return f"{self.titulo} - {self.curso.nombre}"
