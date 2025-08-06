@@ -1,0 +1,119 @@
+{% extends "./baseDocentes.html" %}
+
+{% block body %}
+
+<style>
+  .editar-tarea-container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 30px 35px;
+    background-color: #0d57a1;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(249, 168, 37, 0.12);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: block !important;
+  }
+
+  h2 {
+    color: #b89f23;
+    text-align: center;
+    margin-bottom: 30px;
+    font-weight: 700;
+    font-size: 1.9rem;
+  }
+
+  form {
+    display: block !important;
+  }
+
+  form > * {
+    display: block;
+    margin-bottom: 20px;
+  }
+
+  form label {
+    font-weight: 600;
+    color: #b89f23;
+    margin-bottom: 6px;
+    display: block;
+  }
+
+  form input[type="text"],
+  form input[type="date"],
+  form textarea {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #c9a72f;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+    resize: vertical;
+    box-sizing: border-box;
+    background-color: #fffde7;
+    color: #0b3a73;
+    box-shadow: inset 0 2px 4px rgba(180, 140, 30, 0.15);
+  }
+
+  form input[type="text"]:focus,
+  form input[type="date"]:focus,
+  form textarea:focus {
+    border-color: #b89f23;
+    outline: none;
+    background-color: #fcfcf4;
+    box-shadow: 0 0 6px 2px rgba(180, 140, 30, 0.3);
+  }
+
+  form button[type="submit"] {
+    background: linear-gradient(90deg, #c9a72f, #b89f23);
+    border: none;
+    border-radius: 10px;
+    color: #0b3a73;
+    font-weight: 800;
+    font-size: 1.15rem;
+    padding: 14px;
+    cursor: pointer;
+    box-shadow: 0 3px 8px rgba(180, 140, 30, 0.3);
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+    width: 100%;
+  }
+
+  form button[type="submit"]:hover {
+    background: linear-gradient(90deg, #b89f23, #c9a72f);
+    box-shadow: 0 5px 15px rgba(180, 140, 30, 0.45);
+  }
+
+  .btn-cancelar {
+    display: block;
+    margin: 30px auto 0;
+    padding: 14px 40px;
+    background-color: #b89f23;
+    color: #0d57a1;
+    font-weight: 700;
+    font-size: 1.1rem;
+    border-radius: 10px;
+    text-decoration: none;
+    text-align: center;
+    box-shadow: 0 2px 7px rgba(13, 71, 161, 0.25);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    width: fit-content;
+  }
+
+  .btn-cancelar:hover {
+    background-color: #083b75;
+    box-shadow: 0 4px 12px rgba(13, 71, 161, 0.35);
+  }
+</style>
+
+<div class="editar-tarea-container">
+  <h2>Editar tarea: {{ tarea.titulo }}</h2>
+
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Guardar cambios</button>
+  </form>
+
+  <a href="{% url 'verMateriasDocente' docente_id %}" class="btn-cancelar">Cancelar</a>
+</div>
+
+{% endblock %}

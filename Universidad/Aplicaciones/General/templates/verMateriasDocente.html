@@ -1,21 +1,20 @@
 {% extends "./baseDocentes.html" %}
 
 {% block body %}
-
 <style>
-  /* Contenedor principal específico para no afectar navbar */
+  /* Contenedor principal para separar del navbar */
   .materias-container {
-    /* para separar un poco del navbar */
     margin-top: 20px;
   }
 
+  /* Tarjeta de materia */
   .materia-card {
     background: #e3f2fd; /* azul claro */
     border: 1px solid #bbdefb;
     border-radius: 12px;
     padding: 25px;
     margin-bottom: 30px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 12px rgba(13, 71, 161, 0.15); /* sombra azul suave */
     transition: transform 0.2s ease;
   }
 
@@ -26,9 +25,12 @@
   .materia-card h4 {
     margin-bottom: 20px;
     font-size: 24px;
-    color: #0d47a1;
+    color: #0d47a1; /* azul oscuro */
+    font-weight: 700;
+    text-shadow: 0 0 3px #fbc02d; /* sombra dorada */
   }
 
+  /* Botón agregar tarea con azul oscuro y hover azul medio */
   .btn-agregar-tarea {
     display: inline-block;
     background-color: #0d47a1;
@@ -39,12 +41,15 @@
     font-weight: bold;
     transition: background-color 0.3s ease;
     margin-bottom: 20px;
+    box-shadow: 0 0 5px #fbc02d; /* brillo dorado */
   }
 
   .btn-agregar-tarea:hover {
     background-color: #1565c0;
+    box-shadow: 0 0 8px #f9a825; /* brillo dorado más fuerte */
   }
 
+  /* Lista sin estilo por defecto */
   .materias-container ul {
     list-style-type: none;
     padding-left: 0;
@@ -56,7 +61,7 @@
     border-radius: 10px;
     margin-bottom: 15px;
     border: 1px solid #dee2e6;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+    box-shadow: 0 2px 6px rgba(13, 71, 161, 0.07); /* sombra azul clara */
     transition: background-color 0.3s ease;
   }
 
@@ -72,7 +77,8 @@
 
   .tarea-header strong {
     font-size: 18px;
-    color: #212529;
+    color: #0d47a1; /* azul oscuro */
+    font-weight: 700;
   }
 
   .tarea-header span {
@@ -85,9 +91,14 @@
     border: none;
     color: #0d47a1;
     cursor: pointer;
-    font-weight: 500;
+    font-weight: 600;
     font-size: 14px;
     margin-top: 5px;
+    transition: color 0.2s ease;
+  }
+
+  .btn-ver-mas:hover {
+    color: #f9a825; /* dorado al pasar mouse */
   }
 
   .tarea-descripcion {
@@ -110,14 +121,16 @@
     border: none;
     border-radius: 5px;
     font-size: 14px;
-    font-weight: 500;
+    font-weight: 600;
     margin-right: 8px;
-    transition: background-color 0.2s ease;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 0 5px #fbc02d; /* brillo dorado */
   }
 
   .btn-editar:hover,
   .btn-eliminar:hover {
     background-color: #1565c0;
+    box-shadow: 0 0 8px #f9a825; /* brillo dorado */
   }
 </style>
 
@@ -167,5 +180,4 @@
     </div>
   {% endfor %}
 </div>
-
 {% endblock %}

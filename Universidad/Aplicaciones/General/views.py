@@ -3,6 +3,8 @@ from .models import Curso, Alumno, Docente, Tarea
 from django.http import JsonResponse
 from django.contrib import messages
 import random
+from django.urls import reverse
+from django import forms
 import string
 from django.db.models import Q
 from django.utils import timezone
@@ -60,7 +62,13 @@ def baseAlumnos(request):
     return render(request, "BaseAlumnos.html")
 
 def homebasealumnos(request):
-    return render(request, "homebasealumnos.html")
+    alumno = None
+    alumno_id = request.session.get("alumno_id")  # Obtienes la matrícula de sesión
+    if alumno_id:
+        alumno = Alumno.objects.filter(matricula=alumno_id).first()
+    return render(request, "homebasealumnos.html", {'alumno': alumno})
+
+
 
 def cargamateria(request):
     return render(request, "cargamateria.html")
@@ -223,6 +231,16 @@ def inscribirMateriasAlumno(request):
     }
 
     return render(request, 'inscribirMateriasAlumno.html', context)
+def ver_tareas_alumno(request, matricula):
+    alumno = get_object_or_404(Alumno, matricula=matricula)
+    cursos = alumno.cursos.all().prefetch_related('tareas')
+
+    contexto = {
+        'alumno': alumno,
+        'cursos': cursos,
+    }
+
+    return render(request, 'TareasAlumnos.html', contexto)
 
 
 
@@ -452,14 +470,16 @@ def agregarTarea(request, curso_codigo):
                 descripcion=descripcion,
                 fecha_entrega=fecha_entrega
             )
-            # Redirigir a verMateriasDocente con el id del docente desde sesión
+
             docente_id = request.session.get('docente_id')
-            return redirect('verMateriasDocente', docente_id=docente_id)
+            if docente_id:
+                return redirect('verMateriasDocente', docente_id=docente_id)
+            else:
+                return redirect('login')  # o una página de error
 
     return render(request, 'Tareas.html', {'curso': curso})
-def editar_tarea(request, id):
-    # lógica para editar tarea por ID
-    pass
+
+
 
 def eliminar_tarea(request, id):
     tarea = get_object_or_404(Tarea, id=id)
@@ -467,4 +487,31 @@ def eliminar_tarea(request, id):
     messages.success(request, "La tarea fue eliminada correctamente.")
     # Redirige a donde quieras después de eliminar, por ejemplo a la lista de materias o tareas
     return redirect('verMateriasDocente', request.session.get('docente_id'))
+class TareaForm(forms.ModelForm):
+    class Meta:
+        model = Tarea
+        fields = ['titulo', 'fecha_entrega', 'descripcion']
+        widgets = {
+            'fecha_entrega': forms.DateInput(attrs={'type': 'date'})
+        }
+
+def editar_tarea(request, id):
+    tarea = get_object_or_404(Tarea, id=id)
+    
+    # Supongamos que tienes una forma de obtener docente_id desde la tarea o sesión
+    docente_id = request.session.get('docente_id', None)  # O como lo obtengas
+
+    if request.method == 'POST':
+        form = TareaForm(request.POST, instance=tarea)
+        if form.is_valid():
+            form.save()
+            return redirect('verMateriasDocente', docente_id=docente_id)
+    else:
+        form = TareaForm(instance=tarea)
+
+    return render(request, 'EditarTareas.html', {
+        'form': form,
+        'tarea': tarea,
+        'docente_id': docente_id  # aquí lo pasas para la plantilla
+    })
 

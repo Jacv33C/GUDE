@@ -1,0 +1,97 @@
+{% extends './basealumnos.html' %}
+{% block body %}
+
+<style>
+  .container {
+    background-color: #e3f2fd; /* azul claro */
+    padding: 20px;
+    border-radius: 10px;
+  }
+
+  /* Bordes amarillos para las cards */
+  .border-yellow {
+    border: 2px solid #fbc02d !important;
+  }
+
+  /* Headers de tarjeta azul oscuro con texto amarillo */
+  .card-header {
+    background: linear-gradient(90deg, #002171, #0d47a1);
+    color: #fbc02d !important;
+    font-weight: 700;
+    font-size: 1.25rem;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    text-shadow: 0 0 3px #fbc02d;
+  }
+
+  /* List group item */
+  .list-group-item {
+    background-color: #e3f2fd;
+    border: 1px solid #fbc02d;
+    color: #002171;
+  }
+
+  /* Botón volver */
+  .btn-yellow {
+    background-color: #fbc02d;
+    color: #002171;
+    border: none;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+  }
+  .btn-yellow:hover {
+    background-color: #fff176;
+    color: #0d47a1;
+  }
+
+  .btn-light.border-yellow {
+    border: 1px solid #fbc02d;
+    color: #002171;
+  }
+  .btn-light.border-yellow:hover {
+    background-color: #fff9c4;
+    color: #0d47a1;
+  }
+
+  p.text-muted {
+    color: #555 !important;
+    font-style: italic;
+  }
+</style>
+
+<div class="container mt-4">
+    <h3 class="mb-4 text-center" style="color:#002171; font-weight:700;">Tareas asignadas para {{ alumno.nombre }}</h3>
+
+    {% if cursos %}
+        {% for curso in cursos %}
+            <div class="card mb-3 border-yellow">
+                <div class="card-header">
+                    {{ curso.nombre }} ({{ curso.codigo }})
+                </div>
+                <div class="card-body">
+                    {% if curso.tareas.all %}
+                        <ul class="list-group">
+                            {% for tarea in curso.tareas.all %}
+                                <li class="list-group-item">
+                                    <h5 class="mb-1">{{ tarea.titulo }}</h5>
+                                    <p class="mb-1">{{ tarea.descripcion|default:"Sin descripción." }}</p>
+                                    <small class="text-muted">Fecha de entrega: {{ tarea.fecha_entrega }}</small>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p class="text-muted">No hay tareas asignadas en esta materia.</p>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p class="text-muted text-center">No estás inscrito en ninguna materia.</p>
+    {% endif %}
+
+    <div class="mt-4 text-center">
+        <a href="{% url 'baseAlumnos' %}" class="btn btn-light border-yellow">Volver</a>
+    </div>
+</div>
+
+{% endblock %}

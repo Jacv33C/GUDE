@@ -4,43 +4,73 @@
 {% block body %}
 <style>
   body {
-    background-color: #f5f5fa;
+    background-color: #f4f9ff;
   }
+
   .card-header.bg-primary {
-    background-color: #8e44ad !important; /* Morado claro y vivo */
+    background-color: #0d47a1 !important;
     color: white !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
   }
+
   .card-header.bg-secondary {
-    background-color: #a569bd !important; /* Morado complementario */
+    background-color: #1976d2 !important;
     color: white !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
   }
-  /* Botón Guardar morado */
-  .btn-purple {
-    background-color: #2e5a1cac;
+
+  .btn-azul {
+    background-color: #1565c0;
     color: white;
+    font-weight: 600;
     transition: 0.3s ease;
     border: none;
+    box-shadow: 0 4px 10px rgba(21, 101, 192, 0.3);
   }
-  .btn-purple:hover {
-    background-color: #8e44ad;
+
+  .btn-azul:hover {
+    background-color: #0d47a1;
     color: white;
   }
-  /* Botón Editar morado claro */
-  .btn-outline-purple {
-    color: #8e44ad;
-    border-color: #8e44ad;
+
+  .btn-outline-azul {
+    color: #0d47a1;
+    border: 2px solid #0d47a1;
+    font-weight: 600;
   }
-  .btn-outline-purple:hover {
-    background-color: #8e44ad;
+
+  .btn-outline-azul:hover {
+    background-color: #0d47a1;
     color: white;
   }
-  .btn-outline-purple-dark {
-    color: #6c3483;
-    border-color: #6c3483;
+
+  .btn-outline-dorado {
+    color: #fbc02d;
+    border: 2px solid #fbc02d;
+    font-weight: 600;
   }
-  .btn-outline-purple-dark:hover {
-    background-color: #6c3483;
-    color: white;
+
+  .btn-outline-dorado:hover {
+    background-color: #fbc02d;
+    color: #0d47a1;
+  }
+
+  .form-control:focus {
+    border-color: #1976d2;
+    box-shadow: 0 0 0 0.2rem rgba(25, 118, 210, 0.25);
+  }
+
+  .table thead {
+    background-color: #e3f2fd;
+  }
+
+  .table th {
+    color: #0d47a1;
+    font-weight: 700;
+  }
+
+  .text-muted {
+    color: #607d8b !important;
   }
 </style>
 
@@ -55,15 +85,21 @@
           <form action="{% url 'registrarMateria' %}" method="post">
             {% csrf_token %}
             <div class="form-group mb-3">
-              <input type="text" name="txtCodigo" id="txtCodigo" class="form-control" placeholder="Código" minlength="5" maxlength="5" required />
+              <input type="text" name="txtCodigo" id="txtCodigo" class="form-control"
+                    placeholder="Código"
+                    pattern="^\d{5}$" title="El código debe contener exactamente 5 números" required />
             </div>
+
             <div class="form-group mb-3">
-              <input type="text" name="txtNombre" id="txtNombre" class="form-control" placeholder="Nombre" maxlength="50" required />
+              <input type="text" name="txtNombre" id="txtNombre" class="form-control"
+                    placeholder="Nombre"
+                    pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$" title="El nombre solo debe contener letras y espacios" required />
             </div>
+
             <div class="form-group mb-3">
               <input type="number" name="numCreditos" id="numCreditos" class="form-control" placeholder="Créditos" min="1" max="9" value="1" required />
             </div>
-            <button type="submit" class="btn btn-purple w-100">Guardar</button>
+            <button type="submit" class="btn btn-azul w-100">Guardar</button>
           </form>
         </div>
       </div>
@@ -93,10 +129,10 @@
                 <td>{{ c.nombre }}</td>
                 <td>{{ c.creditos }}</td>
                 <td>
-                  <a href="{% url 'edicionCurso' c.codigo %}" class="btn btn-outline-purple btn-sm w-100 mb-1">Editar</a>
+                  <a href="{% url 'edicionCurso' c.codigo %}" class="btn btn-outline-azul btn-sm w-100 mb-1">Editar</a>
                 </td>
                 <td>
-                  <a href="{% url 'eliminacionCurso' c.codigo %}" class="btn btn-outline-purple-dark btn-sm w-100 btnEliminacion">Eliminar</a>
+                  <a href="{% url 'eliminacionCurso' c.codigo %}" class="btn btn-outline-dorado btn-sm w-100 btnEliminacion">Eliminar</a>
                 </td>
               </tr>
               {% empty %}

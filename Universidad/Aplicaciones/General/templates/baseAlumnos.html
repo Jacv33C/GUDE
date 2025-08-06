@@ -12,53 +12,92 @@
   <style>
     body {
       background-color: #f8f9fa;
-      font-family: 'Segoe UI', sans-serif;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
-    /* Navbar en degradado azul oscuro a celeste */
+    /* Navbar estilo login: azul con detalles dorados */
     .navbar {
-      background: linear-gradient(90deg, #0d47a1, #42a5f5);
-      padding: 0.75rem 1rem;
+      background: linear-gradient(90deg, #002171, #0d47a1);
+      padding: 0.75rem 1.2rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
     }
 
     .navbar-brand {
-      font-weight: bold;
-      font-size: 1.8rem;
-      color: #fff;
-      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+      font-weight: 800;
+      font-size: 2rem;
+      color: #f9a825;
+      letter-spacing: 1px;
+      text-shadow: 0 0 3px #fbc02d;
     }
 
     .navbar-nav .nav-link {
-      color: #f1f1f1;
+      color: #fff;
       margin-right: 15px;
-      transition: color 0.3s ease;
-      font-weight: 500;
+      font-weight: 600;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .navbar-nav .nav-link::after {
+      content: '';
+      position: absolute;
+      width: 0%;
+      height: 2px;
+      bottom: -3px;
+      left: 0;
+      background-color: #fbc02d;
+      transition: width 0.3s ease;
     }
 
     .navbar-nav .nav-link:hover {
-      color: #bbdefb;
+      color: #fbc02d;
+    }
+
+    .navbar-nav .nav-link:hover::after {
+      width: 100%;
     }
 
     .dropdown-menu {
       background-color: #e3f2fd;
-      border-radius: 8px;
-      border: none;
-      padding: 10px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     }
 
-    .dropdown-menu .dropdown-item {
-      color: #0d47a1;
-      padding: 8px 14px;
+    .dropdown-item {
       font-weight: 500;
+      color: #0d47a1;
     }
 
-    .dropdown-menu .dropdown-item:hover {
+    .dropdown-item:hover {
       background-color: #bbdefb;
-      color: #0b3c91;
+      color: #002171;
+    }
+
+    .btn-logout {
+      background-color: #fbc02d;
+      color: #002171;
+      font-weight: 600;
+      padding: 6px 16px;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn-logout:hover {
+      background-color: #fff176;
+      color: #0d47a1;
     }
 
     .container-content {
       padding: 2rem;
+    }
+
+    /* Para el link 'Tareas' cuando está deshabilitado */
+    .nav-link.disabled {
+      color: #bbb !important;
+      pointer-events: none;
+      cursor: default;
+      text-decoration: none;
     }
   </style>
 </head>
@@ -80,18 +119,18 @@
           <li class="nav-item">
             <a class="nav-link" href="{% url 'datosgeneralesalumnos' %}">Datos Generales</a>
           </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Materias
-            </a>
-            <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="{% url 'inscribirMateriasAlumno' %}">Carga de Materias</a></li>
-              <li><a class="dropdown-item" href="#">Ver Materias</a></li>
-              <li><a class="dropdown-item" href="#">Otra opción</a></li>
-            </ul>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'inscribirMateriasAlumno' %}">Carga de Materias</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'cerrar_sesion' %}">Cerrar Sesión</a>
+            {% if alumno %}
+              <a class="nav-link" href="{% url 'TareasAlumnos' alumno.matricula %}">Tareas</a>
+            {% else %}
+              <a class="nav-link disabled" href="#">Tareas</a>
+            {% endif %}
+          </li>
+          <li class="nav-item">
+            <a class="nav-link btn-logout" href="{% url 'cerrar_sesion' %}">Cerrar Sesión</a>
           </li>
         </ul>
       </div>

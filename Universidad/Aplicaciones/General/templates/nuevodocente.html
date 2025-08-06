@@ -4,50 +4,91 @@
 {% block body %}
 <style>
   body {
-    background-color: #f5f5fa;
+    background-color: #f4f9ff;
   }
+
   .card-header.bg-primary {
-    background-color: #8e44ad !important; /* Morado claro y vivo */
+    background-color: #0d47a1 !important;
     color: white !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
   }
+
   .card-header.bg-secondary {
-    background-color: #a569bd !important; /* Morado complementario */
+    background-color: #1976d2 !important;
     color: white !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
   }
-  /* Botón Guardar morado */
-  .btn-purple {
-    background-color: #2e5a1cac;
+
+  .btn-azul {
+    background-color: #1565c0;
     color: white;
+    font-weight: 600;
     transition: 0.3s ease;
     border: none;
+    box-shadow: 0 4px 10px rgba(21, 101, 192, 0.3);
   }
-  .btn-purple:hover {
-    background-color: #8e44ad;
+
+  .btn-azul:hover {
+    background-color: #0d47a1;
     color: white;
   }
-  /* Botones info morados claros */
-  .btn-info-purple {
-    color: #8e44ad;
-    border-color: #8e44ad;
+
+  .btn-outline-azul {
+    color: #0d47a1;
+    border: 2px solid #0d47a1;
+    font-weight: 600;
   }
-  .btn-info-purple:hover {
-    background-color: #8e44ad;
+
+  .btn-outline-azul:hover {
+    background-color: #0d47a1;
     color: white;
   }
-  /* Botón eliminar morado oscuro */
-  .btn-outline-purple-dark {
-    color: #6c3483;
-    border-color: #6c3483;
+
+  .btn-dorado {
+    background-color: #fbc02d;
+    color: #0d47a1;
+    font-weight: 600;
+    border: none;
+    transition: 0.3s ease;
   }
-  .btn-outline-purple-dark:hover {
-    background-color: #6c3483;
-    color: white;
+
+  .btn-dorado:hover {
+    background-color: #fdd835;
+    color: #0d47a1;
+  }
+
+  .btn-outline-dorado {
+    color: #fbc02d;
+    border: 2px solid #fbc02d;
+    font-weight: 600;
+  }
+
+  .btn-outline-dorado:hover {
+    background-color: #fbc02d;
+    color: #0d47a1;
+  }
+
+  .form-control:focus {
+    border-color: #1976d2;
+    box-shadow: 0 0 0 0.2rem rgba(25, 118, 210, 0.25);
+  }
+
+  .table thead {
+    background-color: #e3f2fd;
+  }
+
+  .table th {
+    color: #0d47a1;
+    font-weight: 700;
+  }
+
+  .text-muted {
+    color: #607d8b !important;
   }
 </style>
 
 <div class="container mt-4">
   <div class="row">
-    <!-- Formulario -->
     <div class="col-md-4">
       <div class="card shadow-sm">
         <div class="card-header bg-primary text-white">
@@ -57,19 +98,26 @@
           <form action="{% url 'registrarDocente' %}" method="post">
             {% csrf_token %}
             <div class="form-group mb-3">
-              <input type="text" name="txtId" id="txtId" class="form-control" placeholder="ID" maxlength="9" required>
+              <input type="text" name="txtId" id="txtId" class="form-control"
+                     placeholder="ID"
+                     pattern="^\d+$" title="Solo se permiten números" maxlength="9" required>
             </div>
             <div class="form-group mb-3">
-              <input type="text" name="txtNombre" id="txtNombre" class="form-control" placeholder="Nombre completo" maxlength="100" required />
+              <input type="text" name="txtNombre" id="txtNombre" class="form-control"
+                     placeholder="Nombre completo"
+                     pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$" title="Solo letras y espacios" maxlength="100" required />
             </div>
             <div class="form-group mb-3">
-              <input type="email" name="txtCorreo" id="txtCorreo" class="form-control" placeholder="Correo electrónico" required />
+              <input type="email" name="txtCorreo" id="txtCorreo" class="form-control"
+                     placeholder="Correo electrónico"
+                     pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$" title="Formato de correo inválido" required />
             </div>
             <div class="form-group mb-3">
-              <input type="text" name="txtRfc" id="txtRfc" class="form-control" placeholder="RFC" maxlength="13" required>
+              <input type="text" name="txtRfc" id="txtRfc" class="form-control text-uppercase"
+                     placeholder="RFC" maxlength="13" pattern="^[A-ZÑ&]{3,4}\d{6}[A-Z0-9]{3}$"
+                     title="Formato de RFC inválido" required oninput="this.value = this.value.toUpperCase();">
             </div>
-            <!-- La contraseña no se pide ni se muestra -->
-            <button type="submit" class="btn btn-purple w-100">Guardar</button>
+            <button type="submit" class="btn btn-azul w-100">Guardar</button>
           </form>
         </div>
       </div>
@@ -101,13 +149,13 @@
                 <td>{{ d.correo }}</td>
                 <td>{{ d.rfc }}</td>
                 <td>
-                  <a href="{% url 'asignarMaterias' d.id %}" class="btn btn-info-purple btn-sm w-100 mb-1">Agregar</a>
+                  <a href="{% url 'asignarMaterias' d.id %}" class="btn btn-outline-azul btn-sm w-100 mb-1">Agregar</a>
                 </td>
                 <td>
-                  <a href="{% url 'edicionDocente' d.id %}" class="btn btn-info-purple btn-sm w-100 mb-1">Editar</a>
+                  <a href="{% url 'edicionDocente' d.id %}" class="btn btn-outline-azul btn-sm w-100 mb-1">Editar</a>
                 </td>
                 <td>
-                  <a href="{% url 'eliminacionDocente' d.id %}" class="btn btn-outline-purple-dark btn-sm w-100 btnEliminacion">Eliminar</a>
+                  <a href="{% url 'eliminacionDocente' d.id %}" class="btn btn-outline-dorado btn-sm w-100 btnEliminacion">Eliminar</a>
                 </td>
               </tr>
               {% empty %}

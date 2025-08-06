@@ -1,11 +1,42 @@
 {% extends "./baseAlumnos.html" %}
-
 {% load static %}
 
 {% block body %}
+<style>
+  body {
+    background-color: #f4f9ff;
+  }
+
+  h2.fw-bold.text-primary {
+    color: #0d47a1 !important;
+    font-weight: 900 !important;
+    text-shadow: 1px 1px 2px #fbc02d;
+  }
+
+  h4.text-secondary {
+    color: #1976d2 !important;
+    font-weight: 700;
+  }
+
+  .list-group-item {
+    border: none;
+    font-weight: 500;
+    color: #154170;
+    background-color: transparent;
+  }
+
+  .bg-light {
+    background-color: #e3f2fd !important;
+  }
+
+  .carousel-inner img {
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(13, 71, 161, 0.2);
+  }
+</style>
+
 <div class="container mt-4">
 
-  <!-- Bienvenida -->
   <div class="text-center mb-4">
     <h2 class="fw-bold text-primary">Bienvenidos a UNID Campus Campeche</h2>
     <p class="lead">
@@ -13,9 +44,7 @@
     </p>
   </div>
 
-  <!-- Información institucional + carrusel -->
   <div class="row align-items-center mb-5">
-    <!-- Texto -->
     <div class="col-md-6">
       <p>
         La <strong>Universidad Interamericana para el Desarrollo</strong> (UNID) Campus Campeche está comprometida con la formación integral de líderes capaces de transformar su entorno con ética, responsabilidad y visión humana.
@@ -25,7 +54,6 @@
       </p>
     </div>
 
-    <!-- Carrusel -->
     <div class="col-md-6">
       <div id="bienvenidaCarrusel" class="carousel slide shadow rounded" data-bs-ride="carousel">
         <div class="carousel-inner rounded">
@@ -52,7 +80,6 @@
     </div>
   </div>
 
-  <!-- Misión de la administración -->
   <div class="bg-light p-4 rounded shadow">
     <h4 class="text-secondary">¿Cuál es el propósito de este sitio?</h4>
     <p>

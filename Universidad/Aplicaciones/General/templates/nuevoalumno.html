@@ -4,39 +4,78 @@
 {% block body %}
 <style>
   body {
-    background-color: #f5f5fa;
+    background-color: #f4f9ff;
   }
+
   .card-header.bg-primary {
-    background-color: #8e44ad !important; /* Morado principal */
+    background-color: #0d47a1 !important;
+    color: white !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
   }
+
   .card-header.bg-secondary {
-    background-color: #a569bd !important; /* Morado complementario */
+    background-color: #1976d2 !important;
+    color: white !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
   }
 
-  .btn-success {
-    background-color: #6ab04c;
-    border-color: #6ab04c;
-  }
-  .btn-success:hover {
-    background-color: #58b04c;
-    border-color: #58b04c;
-  }
-
-  .btn-purple {
-    background-color: #9b59b6;
+  .btn-azul {
+    background-color: #1565c0;
     color: white;
+    font-weight: 600;
     transition: 0.3s ease;
+    border: none;
+    box-shadow: 0 4px 10px rgba(21, 101, 192, 0.3);
   }
 
-  .btn-purple:hover {
-    background-color: #8e44ad;
-    color: #fff;
+  .btn-azul:hover {
+    background-color: #0d47a1;
+    color: white;
+  }
+
+  .btn-outline-azul {
+    color: #0d47a1;
+    border: 2px solid #0d47a1;
+    font-weight: 600;
+  }
+
+  .btn-outline-azul:hover {
+    background-color: #0d47a1;
+    color: white;
+  }
+
+  .btn-outline-dorado {
+    color: #fbc02d;
+    border: 2px solid #fbc02d;
+    font-weight: 600;
+  }
+
+  .btn-outline-dorado:hover {
+    background-color: #fbc02d;
+    color: #0d47a1;
+  }
+
+  .form-control:focus {
+    border-color: #1976d2;
+    box-shadow: 0 0 0 0.2rem rgba(25, 118, 210, 0.25);
+  }
+
+  .table thead {
+    background-color: #e3f2fd;
+  }
+
+  .table th {
+    color: #0d47a1;
+    font-weight: 700;
+  }
+
+  .text-muted {
+    color: #607d8b !important;
   }
 </style>
 
 <div class="container mt-5">
   <div class="row">
-    <!-- Formulario de registro -->
     <div class="col-md-4 mb-4">
       <div class="card shadow-lg">
         <div class="card-header bg-primary text-white text-center">
@@ -46,36 +85,31 @@
           <form action="{% url 'registrarAlumno' %}" method="post">
             {% csrf_token %}
             <div class="form-group mb-3">
-              <label for="txtMatricula" class="form-label"></label>
-              <input type="text" name="txtMatricula" id="txtMatricula" class="form-control" placeholder="Matrícula" maxlength="9" required />
+              <input type="text" name="txtMatricula" id="txtMatricula" class="form-control" placeholder="Matrícula" maxlength="9" pattern="\d+" required />
             </div>
             <div class="form-group mb-3">
-              <label for="txtNombre" class="form-label"></label>
-              <input type="text" name="txtNombre" id="txtNombre" class="form-control" placeholder="Nombre completo" maxlength="100" required />
+              <input type="text" name="txtNombre" id="txtNombre" class="form-control" placeholder="Nombre completo" maxlength="100" pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ ]+" required />
             </div>
             <div class="form-group mb-3">
-              <label for="txtCorreo" class="form-label"></label>
-              <input type="email" name="txtCorreo" id="txtCorreo" class="form-control" placeholder="Correo electrónico" required />
+              <input type="email" name="txtCorreo" id="txtCorreo" class="form-control" placeholder="Correo electrónico" pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$" required />
             </div>
             <div class="form-group mb-3">
-              <label for="txtCurp" class="form-label"></label>
-              <input type="text" name="txtCurp" id="txtCurp" class="form-control" placeholder="CURP" maxlength="18" required />
+              <input type="text" name="txtCurp" id="txtCurp" class="form-control text-uppercase" placeholder="CURP" maxlength="18" pattern="[A-Z0-9]{18}" oninput="this.value = this.value.toUpperCase();" required />
             </div>
             <div class="form-group mb-4">
               <label for="selectEstado" class="form-label">Estado</label>
               <select name="selectEstado" id="selectEstado" class="form-select" required>
                 <option value="activo">Activo</option>
                 <option value="inactivo">Inactivo</option>
-                <option value="sabatico">Sabático</option>
+                <option value="sabatico">Baja Temporal</option>
               </select>
             </div>
-            <button type="submit" class="btn btn-success w-100">Guardar</button>
+            <button type="submit" class="btn btn-azul w-100">Guardar</button>
           </form>
         </div>
       </div>
     </div>
 
-    <!-- Lista de alumnos -->
     <div class="col-md-8">
       <div class="card shadow-lg">
         <div class="card-header bg-secondary text-white text-center">
@@ -104,10 +138,10 @@
                 <td>{{ a.curp }}</td>
                 <td>{{ a.estado }}</td>
                 <td>
-                  <a href="{% url 'edicionAlumno' a.matricula %}" class="btn btn-purple btn-sm w-100 mb-1">Editar</a>
+                  <a href="{% url 'edicionAlumno' a.matricula %}" class="btn btn-outline-azul btn-sm w-100 mb-1">Editar</a>
                 </td>
                 <td>
-                  <a href="{% url 'eliminacionAlumno' a.matricula %}" class="btn btn-purple btn-sm w-100 btnEliminacion">Eliminar</a>
+                  <a href="{% url 'eliminacionAlumno' a.matricula %}" class="btn btn-outline-dorado btn-sm w-100 btnEliminacion">Eliminar</a>
                 </td>
               </tr>
               {% empty %}

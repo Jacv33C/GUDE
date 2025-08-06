@@ -1,25 +1,70 @@
 {% extends './base.html' %}
 
 {% block body %}
-<div class="row">
-    <div class="col-md-4 offset-md-4">
-        <h3 class="mb-0">Edición Materia</h3>
-        <div class="card-body">
-            <form action="{% url 'editarMateria' %}" method="post"> 
-                {% csrf_token %}
-                <div class="form-group mb-3">
-                    <input type="text" name="txtCodigo" id="txtCodigo" value="{{ curso.codigo }}" class="form-control" placeholder="Código" minlength="5" maxlength="5" readonly required>
-                </div>
-                <div class="form-group mb-3">
-                    <input type="text" name="txtNombre" id="txtNombre" value="{{ curso.nombre }}" class="form-control" placeholder="Nombre" maxlength="50" required>
-                </div>
-                <div class="form-group mb-3">
-                    <input type="number" name="numCreditos" id="numCreditos" value="{{ curso.creditos }}" class="form-control" placeholder="Créditos" min="1" max="9" required>
-                </div>
-                <button type="submit" class="btn btn-success w-100">Guardar</button>
-            </form>
-        </div>
-    </div>
+<style>
+  body {
+    background-color: #f4f9ff;
+  }
 
-   
+  .card {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .card-header {
+    background-color: #0d47a1;
+    color: white;
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+
+  .btn-azul {
+    background-color: #1565c0;
+    color: white;
+    font-weight: 600;
+    transition: 0.3s ease;
+    border: none;
+    box-shadow: 0 4px 10px rgba(21, 101, 192, 0.3);
+  }
+
+  .btn-azul:hover {
+    background-color: #0d47a1;
+    color: white;
+  }
+
+  .form-control:focus {
+    border-color: #1976d2;
+    box-shadow: 0 0 0 0.2rem rgba(25, 118, 210, 0.25);
+  }
+</style>
+
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">
+          Edición de Materia
+        </div>
+        <div class="card-body">
+          <form action="{% url 'editarMateria' %}" method="post"> 
+            {% csrf_token %}
+            <div class="form-group mb-3">
+              <label for="txtCodigo">Código</label>
+              <input type="text" name="txtCodigo" id="txtCodigo" value="{{ curso.codigo }}" class="form-control" placeholder="Código" minlength="5" maxlength="5" readonly required>
+            </div>
+            <div class="form-group mb-3">
+              <label for="txtNombre">Nombre de la materia</label>
+              <input type="text" name="txtNombre" id="txtNombre" value="{{ curso.nombre }}" class="form-control" placeholder="Nombre" maxlength="50" required>
+            </div>
+            <div class="form-group mb-4">
+              <label for="numCreditos">Créditos</label>
+              <input type="number" name="numCreditos" id="numCreditos" value="{{ curso.creditos }}" class="form-control" placeholder="Créditos" min="1" max="9" required>
+            </div>
+            <button type="submit" class="btn btn-azul w-100">Guardar</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}

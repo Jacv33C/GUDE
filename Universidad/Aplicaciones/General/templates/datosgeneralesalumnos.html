@@ -1,13 +1,54 @@
 {% extends "./baseAlumnos.html" %}
 
 {% block body %}
+<style>
+  /* Contenedor centrado y con padding */
+  .card {
+    border-radius: 12px;
+    border: 2px solid #fbc02d; /* borde amarillo */
+  }
+
+  .card-header {
+    background: linear-gradient(90deg, #002171, #0d47a1);
+    color: #fbc02d;
+    font-weight: 700;
+    font-size: 1.5rem;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    text-align: center;
+    text-shadow: 0 0 3px #fbc02d;
+  }
+
+  table th {
+    background-color: #0d47a1;
+    color: #fbc02d;
+    font-weight: 600;
+    width: 35%;
+  }
+
+  table td {
+    background-color: #e3f2fd;
+    color: #002171;
+    font-weight: 500;
+  }
+
+  table, th, td {
+    border: 1px solid #fbc02d;
+  }
+
+  /* Espaciado y centrado */
+  .container {
+    padding-top: 3rem;
+  }
+</style>
+
 <div class="container mt-5 d-flex justify-content-center">
   <div class="col-md-6">
     <div class="card shadow-sm">
-      <div class="card-header bg-secondary text-white text-center">
+      <div class="card-header">
         <h4>Bienvenido(a)</h4>
       </div>
-      <div class="card-body">
+      <div class="card-body p-4">
         <table class="table table-bordered mb-0">
           <tbody>
             <tr>
