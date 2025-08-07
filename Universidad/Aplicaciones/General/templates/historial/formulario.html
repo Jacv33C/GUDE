@@ -1,0 +1,54 @@
+{% load static %}
+<!-- Bootstrap 5 desde CDN -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<div class="container mt-5">
+  <div class="card shadow">
+    <div class="card-header bg-primary text-white text-center">
+      <h4>{{ titulo }}</h4>
+    </div>
+
+    <div class="card-body">
+      <form method="post" novalidate>
+        {% csrf_token %}
+
+        <div class="mb-3">
+          <label for="id_alumno" class="form-label">Alumno</label>
+          {{ formulario.alumno }}
+          {% for error in formulario.alumno.errors %}
+            <div class="text-danger small">{{ error }}</div>
+          {% endfor %}
+        </div>
+
+        <div class="mb-3">
+          <label for="id_curso" class="form-label">Materia</label>
+          {{ formulario.curso }}
+          {% for error in formulario.curso.errors %}
+            <div class="text-danger small">{{ error }}</div>
+          {% endfor %}
+        </div>
+
+        <div class="mb-3">
+          <label for="id_calificacion" class="form-label">Calificación</label>
+          {{ formulario.calificacion }}
+          {% for error in formulario.calificacion.errors %}
+            <div class="text-danger small">{{ error }}</div>
+          {% endfor %}
+        </div>
+
+        <div class="mb-3">
+          <label for="id_fecha" class="form-label">Fecha</label>
+          {{ formulario.fecha }}
+          {% for error in formulario.fecha.errors %}
+            <div class="text-danger small">{{ error }}</div>
+          {% endfor %}
+        </div>
+
+        <div class="text-center mt-4">
+          <button type="submit" class="btn btn-success px-4">Guardar</button>
+          <a href="{% url 'lista_historial' %}" class="btn btn-secondary px-4 ms-2">Volver al listado</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
