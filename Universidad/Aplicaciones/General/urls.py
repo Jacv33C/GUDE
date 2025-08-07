@@ -57,6 +57,11 @@ path('eliminar-tarea/<int:id>/', views.eliminar_tarea, name='eliminarTarea'),
 path('tareas/editar/<int:id>/', views.editar_tarea, name='editarTarea'),
 path('alumno/<str:matricula>/tareas/', views.ver_tareas_alumno, name='TareasAlumnos'),
 
+# CRUD HISTORIAL ACADÉMICO
+path('historial/', views.lista_historial, name='lista_historial'),
+path('historial/crear/', views.crear_historial, name='crear_historial'),
+path('historial/editar/<int:id>/', views.editar_historial, name='editar_historial'),
+path('historial/eliminar/<int:id>/', views.eliminar_historial, name='eliminar_historial'),
 
 
 

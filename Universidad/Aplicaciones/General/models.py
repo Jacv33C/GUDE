@@ -55,3 +55,12 @@ class Tarea(models.Model):
 
     def __str__(self):
         return f"{self.titulo} - {self.curso.nombre}"
+
+class HistorialAcademico(models.Model):
+    alumno = models.ForeignKey(Alumno, on_delete=models.CASCADE)
+    curso = models.ForeignKey(Curso, on_delete=models.CASCADE)
+    calificacion = models.DecimalField(max_digits=4, decimal_places=2)
+    fecha = models.DateField(default=timezone.now)
+
+    def __str__(self):
+        return f"{self.alumno.nombre} - {self.curso.nombre} - {self.calificacion}"
